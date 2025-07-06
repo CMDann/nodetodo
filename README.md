@@ -41,6 +41,44 @@ A retro-styled, terminal-inspired todo application with rich text notes, drag-an
 
 ## Installation
 
+### Option 1: Docker (Recommended for Servers)
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd terminal-todo-app
+   ```
+
+2. **Using Docker Compose (Easiest):**
+   ```bash
+   # Start the application
+   docker-compose up -d
+   
+   # View logs
+   docker-compose logs -f
+   
+   # Stop the application
+   docker-compose down
+   ```
+
+3. **Using Docker directly:**
+   ```bash
+   # Build the image
+   docker build -t terminal-todo-app .
+   
+   # Run the container
+   docker run -d \
+     --name terminal-todo \
+     -p 3000:3000 \
+     -v todo_data:/app/data \
+     terminal-todo-app
+   ```
+
+4. **Open your browser:**
+   Navigate to `http://localhost:3000`
+
+### Option 2: Local Development
+
 1. **Clone the repository:**
    ```bash
    git clone <repository-url>
@@ -149,19 +187,98 @@ CREATE TABLE project_meta (
 );
 ```
 
+## Docker Deployment
+
+### Production Deployment
+
+**Docker Compose (Recommended):**
+```bash
+# Clone and start
+git clone <repository-url>
+cd terminal-todo-app
+docker-compose up -d
+
+# The app will be available at http://localhost:3000
+# Data persists in the 'todo_data' Docker volume
+```
+
+**Docker Commands:**
+```bash
+# Build
+docker build -t terminal-todo-app .
+
+# Run with persistent data
+docker run -d \
+  --name terminal-todo \
+  -p 3000:3000 \
+  -v todo_data:/app/data \
+  --restart unless-stopped \
+  terminal-todo-app
+
+# View logs
+docker logs -f terminal-todo
+
+# Stop and remove
+docker stop terminal-todo
+docker rm terminal-todo
+```
+
+### Server Deployment
+
+**With Docker on VPS/Cloud:**
+```bash
+# On your server
+git clone <repository-url>
+cd terminal-todo-app
+
+# Start with Docker Compose
+docker-compose up -d
+
+# Optional: Use different port
+# Edit docker-compose.yml and change "3000:3000" to "80:3000"
+```
+
+**With reverse proxy (nginx):**
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+    
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
 ## Configuration
 
+### Environment Variables
+- `PORT` - Server port (default: 3000)
+- `DB_PATH` - Database file path (default: ./todos.db)
+- `NODE_ENV` - Environment mode (production/development)
+
 ### Port Configuration
-The server runs on port 3000 by default. Change via environment variable:
 ```bash
+# Local development
 PORT=8080 npm start
+
+# Docker
+docker run -e PORT=8080 -p 8080:8080 terminal-todo-app
 ```
 
 ### Database Location
-The SQLite database is created as `todos.db` in the project root. To reset:
 ```bash
-rm todos.db
-npm start  # Will recreate with fresh schema
+# Local - reset database
+rm todos.db && npm start
+
+# Docker - reset data volume
+docker-compose down -v
+docker-compose up -d
 ```
 
 ## Development
