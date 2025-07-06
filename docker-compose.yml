@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  terminal-todo:
+    build: .
+    container_name: terminal-todo-app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persist database data
+      - todo_data:/app/data
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    healthcheck:
+      test: ["CMD", "node", "-e", "const http = require('http'); const options = { host: 'localhost', port: 3000, path: '/', timeout: 2000 }; const request = http.request(options, (res) => { if (res.statusCode === 200) process.exit(0); else process.exit(1); }); request.on('error', () => process.exit(1)); request.end();"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  todo_data:
+    driver: local

@@ -1,16 +1,37 @@
 {
-  "name": "jerintest",
+  "name": "terminal-todo-app",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A retro-styled, terminal-inspired todo application with rich text notes, drag-and-drop functionality, and professional PDF export capabilities.",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "todo",
+    "terminal",
+    "retro",
+    "notes",
+    "productivity",
+    "pdf-export",
+    "wysiwyg",
+    "drag-drop",
+    "sqlite"
+  ],
+  "author": "Terminal Todo App Contributors",
+  "license": "MIT",
   "type": "commonjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/terminal-todo-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/terminal-todo-app/issues"
+  },
+  "homepage": "https://github.com/yourusername/terminal-todo-app#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "express": "^5.1.0",
     "html-to-text": "^9.0.5",
